@@ -24,7 +24,7 @@ Ensure your machine meets the following prerequisites before proceeding:
 Clone the project repository to your local machine and navigate into the root directory:
 
 ```powershell
-git clone https://github.com/your-org/PharmacyGuard.git
+git clone https://github.com/Nana-996/PharmacyGuard.git
 cd PharmacyGuard
 ```
 

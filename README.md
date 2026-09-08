@@ -184,7 +184,7 @@ For complete safety policies, see [SECURITY.md](SECURITY.md).
 
 ### Clone Repository
 ```powershell
-git clone https://github.com/your-org/PharmacyGuard.git
+git clone https://github.com/Nana-996/PharmacyGuard.git
 cd PharmacyGuard
 ```
 
