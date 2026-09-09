@@ -1,0 +1,2 @@
+# PharmacyGuard Backend Dependencies
+-r backend/requirements.txt

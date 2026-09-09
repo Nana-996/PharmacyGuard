@@ -13,8 +13,19 @@ from typing import Dict, Any, Optional
 
 import jwt
 
-# Configuration with secure fallbacks for local development
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "pharmacyguard-dev-secret-key-change-in-production-2026")
+# Dynamic JWT key handling: load from environment, or generate a cryptographically secure
+# ephemeral 256-bit secret if not configured (never use hardcoded static secret strings).
+_env_jwt_secret = os.getenv("JWT_SECRET_KEY")
+if _env_jwt_secret and _env_jwt_secret.strip():
+    JWT_SECRET_KEY = _env_jwt_secret.strip()
+else:
+    # Ephemeral CSPRNG secret prevents static credential compromise while ensuring local runnability
+    JWT_SECRET_KEY = secrets.token_hex(32)
+    import logging
+    logging.getLogger("pharmacyguard.auth").warning(
+        "SECURITY NOTICE: JWT_SECRET_KEY is not set. An ephemeral 256-bit secret has been generated "
+        "for this process session. Set JWT_SECRET_KEY in .env for persistent multi-process sessions."
+    )
 JWT_ALGORITHM = "HS256"
 DEFAULT_ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 12  # 12-hour hospital shift session
 PBKDF2_ITERATIONS = 600_000

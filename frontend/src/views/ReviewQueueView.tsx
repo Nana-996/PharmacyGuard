@@ -80,7 +80,7 @@ export const ReviewQueueView: React.FC<ReviewQueueViewProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-[var(--pg-text)]">Review Queue</h2>
-          <p className="text-[13px] text-[var(--pg-text-muted)]">Triage and authorise prescription dispensing</p>
+          <p className="text-[13px] text-[var(--pg-text-muted)]">Simulated prescription orders awaiting pharmacist triage and dispensing authorization</p>
         </div>
         <div className="flex items-center gap-2">
           <button

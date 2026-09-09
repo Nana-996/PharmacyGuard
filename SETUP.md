@@ -105,9 +105,11 @@ BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-4-6
 # ==============================================================================
 # Security & JWT Session Configuration
 # ==============================================================================
+# If omitted or blank, an ephemeral CSPRNG secret is automatically generated per session:
 JWT_SECRET_KEY=pharmacyguard-dev-secret-key-2026-hackathon
 JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=480
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000
 
 # ==============================================================================
 # Server Configuration

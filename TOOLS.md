@@ -192,6 +192,12 @@ Returns a structured dictionary evaluating dose safety against reference limits:
 - **Table:** `medication_reference`
 - **Fields:** `generic_name`, `therapeutic_class`, `min_single_dose_mg`, `max_single_dose_mg`, `max_daily_dose_mg`, `dosage_notes`
 
+### Format Handling & Limitations:
+- **Supported Formats:** Parses milligram single-dose values (e.g., `"500mg"`, `"20 mg"`) and standard frequency intervals (`"Every 8 hours"`, `"Three times daily"`, `"TID"`, `"Every 12 hours"`, `"BID"`, `"Once daily"`, `"QID"`).
+- **Unrecognized Frequency Handling:** When a frequency string cannot be mapped to a known cadence, the daily multiplier conservatively defaults to `1.0` (assuming once-daily single-dose exposure) and preserves the original raw frequency string for clinician review.
+- **Unrecognized Medication / Missing Reference:** If the medication is not mapped in `medication_reference` or the dosage cannot be parsed numerically, the tool does not mark it as passed; it returns `finding_priority: "REVIEW"` with an explicit note advising manual pharmacist verification.
+- **Clinical Scope:** This tool provides prototype decision support on recognized synthetic formats. It is not a general clinical dosage engine (it does not perform renal CrCl clearance adjustments, body surface area calculation, pediatric weight-based scaling, or complex infusion titrations).
+
 ---
 
 ## inventory_check

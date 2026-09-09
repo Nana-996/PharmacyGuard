@@ -145,6 +145,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           );
         })}
       </nav>
+
+      {/* Environment Indicator */}
+      <div className="p-3 border-t border-[var(--pg-border)] bg-slate-50/60">
+        <div className="flex items-center gap-1.5 text-[11px] text-[var(--pg-text-muted)] font-medium">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+          <span className="truncate">Simulated EHR & Formulary</span>
+        </div>
+      </div>
     </aside>
   );
 };

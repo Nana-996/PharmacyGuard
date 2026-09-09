@@ -10,7 +10,7 @@ AI Clinical Verification Agent for Pharmacists & Pharmacy Students
 [![Tailwind CSS v4](https://img.shields.io/badge/Styling-Tailwind%20CSS%20v4-38B2AC)](https://tailwindcss.com/)
 
 > **Built for the Amazon Agents for Humans Hackathon.**  
-> PharmacyGuard is an autonomous AI clinical verification and operations assistant that empowers licensed pharmacists and pharmacy students to catch prescribing errors, verify clinical guidelines, check hospital inventory in real time, and safeguard patient outcomes—all under strict **Human-in-the-Loop (HITL)** governance.
+> PharmacyGuard is an AI clinical verification and pharmacy operations agent that empowers licensed pharmacists and pharmacy students to catch prescribing errors, verify clinical guidelines, check simulated hospital inventory, and safeguard patient outcomes—all under strict **Human-in-the-Loop (HITL)** governance.
 
 ---
 
@@ -51,13 +51,13 @@ PharmacyGuard tackles these challenges through an intelligent, layered architect
 ## Key Features
 
 - **Multi-Factor Clinical Verification:** Instant checks for indication alignment, documented allergy conflicts, therapeutic duplications, drug-drug interactions, and maximum daily dose limits.
-- **Real-Time Stock & Formulary Checks:** Integrates clinical verification with hospital inventory to surface stockouts and alternative strength needs instantly.
+- **Simulated Stock & Formulary Checks:** Integrates clinical verification with simulated hospital inventory to surface stockouts and alternative strength needs instantly.
 - **One-Click Demo Authentication:** Preconfigured role-based access control (RBAC) supporting **Staff Pharmacist**, **Chief Pharmacist**, **Pharmacy Student**, and **Administrator** profiles.
 - **Pharmacist Decision-Support Dashboard:** Clean visual badges (`CLEAR`, `REVIEW`, `HIGH_PRIORITY_REVIEW`), expandable clinical evidence cards, and 1-click action buttons.
 - **Mandatory Clinical Override Rationale:** When a pharmacist overrides an AI-identified risk flag, entering a clinical justification is mandatory, preserving complete medicolegal accountability.
 - **Immutable Clinical Audit Trail:** Every verification, approval, rejection, override, stock adjustment, and login attempt is cryptographically logged in an append-only audit database.
 - **Student Simulation Workspace:** Dedicated case scenarios, interactive clinical quizzes, submission comparisons, and personalized educational feedback.
-- **Chief Pharmacist Operations & Workload Analytics:** Real-time metrics on prescription throughput, clinical override rates, inventory health, and staff workload.
+- **Chief Pharmacist Operations & Workload Analytics:** Operational metrics on prescription throughput, clinical override rates, inventory health, and staff workload.
 
 ---
 
@@ -88,7 +88,7 @@ flowchart TD
 1. **Deterministic Evidence Gathering:** When a prescription is ingested, PharmacyGuard queries the local SQLite clinical knowledge base via specialized Python tools in `<0.1s`.
 2. **Context Synthesis:** The gathered evidence, patient demographics, active diagnoses, and prescribed regimens are structured into a prompt for the Strands agent.
 3. **Bedrock Reasoning:** Amazon Bedrock synthesizes the multi-source evidence into clear clinical narratives, prioritizing critical findings and highlighting actionable guidance.
-4. **Resilient Fallback Engine:** If the LLM call experiences high network latency or API rate limits, PharmacyGuard gracefully falls back to a deterministic rule-based synthesis engine, ensuring zero downtime in critical hospital workflows.
+4. **Resilient Fallback Engine:** If the LLM call experiences high network latency or API rate limits, PharmacyGuard gracefully falls back to a deterministic rule-based synthesis engine, ensuring verification decision support and evaluation continue without interruption.
 
 For full architectural details, see [AGENT.md](AGENT.md) and [docs/agent-workflow.md](docs/agent-workflow.md).
 
@@ -100,17 +100,20 @@ PharmacyGuard equips the Strands agent with **9 purpose-built tools** categorize
 
 | Category | Tool Name | Description | Output Priority |
 |---|---|---|---|
-| **Prescription Retrieval** | `get_prescription` | Retrieves patient demographics, active ICD-10 diagnoses, documented allergies, and full medication order details from the hospital database. | `CLEAR` / `ERROR` |
+| **Prescription Retrieval** | `get_prescription` | Retrieves patient demographics, active ICD-10 diagnoses, documented allergies, and full medication order details from the simulated hospital database. | `CLEAR` / `ERROR` |
 | **Clinical Verification** | `diagnosis_medication_check` | Validates whether the prescribed drug matches recognized therapeutic guidelines for the patient's active diagnosis. | `CLEAR` / `REVIEW` |
 | **Clinical Verification** | `allergy_check` | Detects direct drug allergy conflicts and beta-lactam / cephalosporin cross-reactivities against recorded patient allergies. | `CLEAR` / `HIGH_PRIORITY_REVIEW` |
 | **Clinical Verification** | `duplicate_medication_check` | Identifies concurrent active ingredient duplications or therapeutic class redundancies (e.g., dual oral NSAIDs). | `CLEAR` / `HIGH_PRIORITY_REVIEW` |
 | **Clinical Verification** | `medication_interaction_check` | Evaluates multi-drug regimens against drug-drug interaction reference pairs for pharmacodynamic and pharmacokinetic hazards. | `CLEAR` / `HIGH_PRIORITY_REVIEW` |
 | **Clinical Verification** | `dosage_check` | Validates single-dose and calculated daily dose against standard therapeutic boundaries and absolute toxic ceilings. | `CLEAR` / `REVIEW` / `HIGH_PRIORITY_REVIEW` |
-| **Inventory & Operations** | `check_inventory` | Interrogates the hospital pharmacy formulary to check stock availability, low-stock warnings, and missing strength formulations. | `AVAILABLE` / `LOW STOCK` / `OUT OF STOCK` |
+| **Inventory & Operations** | `check_inventory` | Interrogates the simulated hospital pharmacy formulary to check stock availability, low-stock warnings, and missing strength formulations. | `AVAILABLE` / `LOW STOCK` / `OUT OF STOCK` |
 | **Inventory & Operations** | `get_low_stock_items` | Returns all pharmacy catalog items currently at or below configured reorder levels for restocking workflows. | Operational Summary |
 | **Inventory & Operations** | `get_inventory_summary` | Provides aggregate pharmacy supply metrics, stock health percentages, and reorder alerts. | Operational Summary |
 
 For full input/output schemas and code signatures, see [TOOLS.md](TOOLS.md).
+
+> [!NOTE]
+> **Dosage Engine Scope & Format Handling:** The `dosage_check` tool parses standard milligram dosages and recognized frequency intervals (`TID`, `BID`, `QID`, `Once daily`, `Every 8 hours`, etc.) against curated reference ranges. If an unmapped medication or unrecognized dosage/frequency format is encountered, the tool applies a conservative `1.0` multiplier fallback, flags the order for mandatory human `REVIEW`, and prompts the pharmacist for manual calculation. It is a prototype decision-support heuristic, not a generalized pharmacokinetic calculator. See [TOOLS.md](TOOLS.md) and [Limitations](#limitations).
 
 ---
 
@@ -158,7 +161,9 @@ For full input/output schemas and code signatures, see [TOOLS.md](TOOLS.md).
              +-------------------------------+                 +-------------------------------+
 ```
 
-PharmacyGuard separates clinical decision-support reasoning from the hospital repository data layer. A detailed architectural breakdown and system data flows can be found in [ARCHITECTURE.md](ARCHITECTURE.md).
+![PharmacyGuard System Architecture](architecture/pharmacyguard-architecture.png)
+
+PharmacyGuard separates clinical decision-support reasoning from the simulated hospital repository data layer across four decoupled architectural tiers. A detailed architectural breakdown and system data flows can be found in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
@@ -182,10 +187,22 @@ For complete safety policies, see [SECURITY.md](SECURITY.md).
 - **Node.js:** 18.x or later (and `npm`)
 - **AWS Bedrock Access:** AWS credentials or an `AWS_BEARER_TOKEN_BEDROCK` with permissions for Claude Sonnet in `us-east-1`. *(Note: PharmacyGuard includes full deterministic execution if no Bedrock token is present!)*
 
-### Clone Repository
+### Step-by-Step Setup from a Clean Clone
+
 ```powershell
+# 1. Clone the repository
 git clone https://github.com/Nana-996/PharmacyGuard.git
 cd PharmacyGuard
+
+# 2. Create and activate Python virtual environment
+python -m venv .venv
+.venv\Scripts\activate
+
+# 3. Install backend dependencies
+pip install -r backend/requirements.txt
+
+# 4. Copy environment configuration
+copy .env.example .env
 ```
 
 For comprehensive step-by-step installation instructions, see [SETUP.md](SETUP.md).
@@ -194,17 +211,13 @@ For comprehensive step-by-step installation instructions, see [SETUP.md](SETUP.m
 
 ## Environment Variables
 
-Copy the example environment configuration:
-```powershell
-copy .env.example .env
-```
-
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `AWS_BEARER_TOKEN_BEDROCK` | Yes (for live Bedrock) | `None` | AWS Bedrock API key or Bearer Token for model invocation. |
 | `AWS_DEFAULT_REGION` | Yes | `us-east-1` | AWS region where Bedrock model access is enabled. |
 | `BEDROCK_MODEL_ID` | Yes | `us.anthropic.claude-sonnet-4-6` | Amazon Bedrock Claude model ID. |
-| `JWT_SECRET_KEY` | Optional | `pharmacyguard-secret-key-2026` | Secret key used for signing session JWT tokens. |
+| `JWT_SECRET_KEY` | Optional | *Auto-generated ephemeral CSPRNG* | Secret key for signing session JWT tokens. Set in `.env` for persistent sessions. |
+| `CORS_ALLOWED_ORIGINS` | Optional | `http://localhost:5173,...` | Comma-separated list of allowed web client origins. |
 
 See [.env.example](.env.example) for a complete template.
 
@@ -291,9 +304,13 @@ For detailed schema descriptions, see [DATA.md](DATA.md).
 
 ## Limitations
 
+- **Dosage Engine Scope & Recognized Formats:** The deterministic dosage verification tool (`dosage_check`) operates on supported synthetic reference data and recognized dosage/frequency formats (e.g., numeric mg values and common interval sigs). It is a prototype decision-support heuristic, not a general-purpose clinical dosage engine (e.g., it does not compute renal CrCl adjustments, body surface area, pediatric mg/kg weight curves, or complex IV titrations).
+- **Graceful Handling of Unrecognized Formats:** 
+  - *What happens when a frequency format isn't recognized?* If a frequency string cannot be matched to known hourly or daily cadences (e.g., non-standard PRN text, tapering schedules), the daily multiplier conservatively defaults to `1.0` (single daily dose assumption) while preserving the full raw prescription string for clinician inspection.
+  - *What happens when a dose or drug isn't in reference data?* If a dose cannot be parsed numerically or a medication lacks a stored reference ceiling in `medication_reference`, the engine flags the item as `REVIEW`, displays a missing-reference alert, and routes the verification to the licensed pharmacist under Human-in-the-Loop governance.
 - **Synthetic Clinical Guidelines:** The current demonstration utilizes a curated clinical knowledge base covering common cardiovascular, metabolic, anti-infective, and analgesic drugs. It does not replace full-scale commercial compendia (e.g., Lexicomp or Micromedex).
-- **Decision-Support Scope:** PharmacyGuard does not provide definitive medical diagnoses or prescribe medications. Final dispensing responsibility rests exclusively with the licensed human pharmacist.
-- **Evaluation Sandbox:** Real-world hospital deployment requires connection to institutional identity providers (SAML / OAuth2) and validated clinical EHR endpoints.
+- **Decision-Support Scope:** PharmacyGuard does not provide definitive medical diagnoses, autonomously modify orders, or prescribe medications. Final dispensing responsibility rests exclusively with the licensed human pharmacist.
+- **Evaluation Sandbox:** Real-world hospital deployment requires connection to institutional identity providers (SAML / OAuth2) and validated clinical EHR endpoints (FHIR / HL7).
 
 ---
 

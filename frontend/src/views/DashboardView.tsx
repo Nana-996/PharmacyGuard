@@ -77,7 +77,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-[var(--pg-text)]">Dashboard</h2>
-          <p className="text-[13px] text-[var(--pg-text-muted)]">Pharmacy operations overview</p>
+          <p className="text-[13px] text-[var(--pg-text-muted)]">Simulated pharmacy operations overview</p>
         </div>
         <button
           onClick={loadData}

@@ -45,6 +45,9 @@ export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing = false 
         <span className="font-medium text-[var(--pg-text)]">St. Jude Medical Center</span>
         <span className="text-[var(--pg-border)]">·</span>
         <span>Inpatient Pharmacy</span>
+        <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+          Simulated Data
+        </span>
       </div>
 
       <div className="flex items-center gap-3">

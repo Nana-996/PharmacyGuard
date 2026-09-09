@@ -1,6 +1,6 @@
 # PharmacyGuard Agent
 
-The **PharmacyGuard Agent** is an autonomous clinical verification and pharmacy operations assistant designed to support licensed pharmacists, pharmacy residents, and pharmacy students. Powered by the **Strands Agents SDK** and **Amazon Bedrock**, the agent inspects electronic prescriptions, queries deterministic clinical knowledge bases, evaluates hospital inventory, and provides prioritized, evidence-backed decision support under strict human oversight.
+The **PharmacyGuard Agent** is an AI clinical verification and pharmacy operations agent designed to support licensed pharmacists, pharmacy residents, and pharmacy students. Powered by the **Strands Agents SDK** and **Amazon Bedrock**, the agent inspects electronic prescriptions, queries deterministic clinical knowledge bases, evaluates hospital inventory, and provides prioritized, evidence-backed decision support under strict human oversight.
 
 ---
 
@@ -8,7 +8,7 @@ The **PharmacyGuard Agent** is an autonomous clinical verification and pharmacy 
 
 **Strands Agents SDK** (`strands-agents>=1.0.0`)
 
-The agent is implemented using the Strands Agents SDK, an extensible framework for building autonomous agents with first-class support for tool orchestration, structured prompts, and foundation model providers. Key components include:
+The agent is implemented using the Strands Agents SDK, an extensible framework for building AI agents with first-class support for tool orchestration, structured prompts, and foundation model providers. Key components include:
 - `strands.Agent`: The core conversational and reasoning agent orchestrator that manages context, system directives, and tool execution.
 - `strands.tool`: The decorator used to expose Python verification functions to the agent with auto-generated JSON schemas from type annotations and docstrings.
 - `strands.models.bedrock.BedrockModel`: The model provider interfacing directly with Amazon Bedrock via Boto3.
@@ -39,7 +39,7 @@ The PharmacyGuard Agent is tasked with specific clinical and operational duties:
 4. **Therapeutic Duplication Detection:** Identifies concurrent prescriptions that duplicate active pharmaceutical ingredients or therapeutic mechanisms (e.g., dual systemic NSAIDs).
 5. **Drug-Drug Interaction Analysis:** Screens multi-drug regimens against pharmacokinetic and pharmacodynamic interaction matrices.
 6. **Dosage Range Validation:** Calculates 24-hour cumulative doses from administration frequencies and verifies single/daily doses against clinical boundaries.
-7. **Hospital Formulary Stock Verification:** Checks real-time pharmacy inventory to verify stock availability, identify low-stock items, and alert on stockouts.
+7. **Hospital Formulary Stock Verification:** Checks simulated pharmacy inventory to verify stock availability, identify low-stock items, and alert on stockouts.
 8. **Clinical Triage Classification:** Categorizes the overall prescription risk level into `CLEAR`, `REVIEW`, or `HIGH_PRIORITY_REVIEW`.
 9. **Educational Mentorship:** In Student Simulation Mode, evaluates student clinical determinations against verified evidence and provides automated scoring and clinical pearls.
 
@@ -142,7 +142,7 @@ The agent dynamically determines which tools to invoke based on prescription par
 
 ## Tool Execution
 
-To ensure real-time clinical performance, tools are executed through a **deterministic execution pipeline**:
+To ensure responsive clinical performance, tools are executed through a **deterministic execution pipeline**:
 
 ```python
 def _gather_deterministic_evidence(prescription_id: str) -> Dict[str, Any]:
@@ -263,7 +263,7 @@ Amazon Bedrock invocations run inside a `concurrent.futures.ThreadPoolExecutor` 
 If Bedrock times out, returns malformed JSON, or encounters an AWS credential error, the system calls `_synthesize_deterministic_review()`:
 - Evaluates tool output booleans mathematically (`has_allergy_conflict`, `has_duplicates`, `within_standard_range`, `has_out_of_stock`).
 - Generates a fully populated `AgentStructuredReview` with identical schema guarantees.
-- **Zero Downtime Guarantee:** The application functions with 100% feature coverage even completely offline or without an active AWS connection.
+- **Offline & Latency Resilience:** The prototype maintains review synthesis capabilities even completely offline or when cloud AI endpoints experience latency or connection failures.
 
 ### 3. Schema Normalization & Robust Parsing
 The `_extract_json_from_agent_response()` helper extracts JSON from markdown-fenced code blocks (` ```json ... ``` `) and outer JSON braces, with automatic status normalization (`"HIGH"` $\rightarrow$ `"HIGH_PRIORITY_REVIEW"`).

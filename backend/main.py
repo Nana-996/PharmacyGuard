@@ -24,13 +24,16 @@ app = FastAPI(
     version="0.3.0"
 )
 
-# CORS middleware for React/TypeScript frontend
+# Configurable CORS origins with secure local defaults
+cors_env = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000")
+allowed_origins = [origin.strip() for origin in cors_env.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"],
 )
 
 # Register API routers

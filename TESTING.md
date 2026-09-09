@@ -1,6 +1,6 @@
 # PharmacyGuard — Judge Testing Guide
 
-Welcome, Hackathon Judges! This document provides a **step-by-step, 5-minute evaluation guide** to test every aspect of **PharmacyGuard**—from autonomous AI clinical verification and Human-in-the-Loop decision enforcement to the interactive Pharmacy Student Simulation Workspace.
+Welcome, Hackathon Judges! This document provides a **step-by-step, 5-minute evaluation guide** to test every aspect of **PharmacyGuard**—from AI clinical verification and pharmacy operations decision support under Human-in-the-Loop enforcement to the interactive Pharmacy Student Simulation Workspace.
 
 ---
 

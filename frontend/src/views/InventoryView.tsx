@@ -46,7 +46,7 @@ export const InventoryView: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-[var(--pg-text)]">Pharmacy Inventory</h2>
-          <p className="text-[13px] text-[var(--pg-text-muted)]">Stock levels and formulary catalog</p>
+          <p className="text-[13px] text-[var(--pg-text-muted)]">Simulated hospital stock levels and formulary catalog</p>
         </div>
         <button onClick={loadData} disabled={loading} className="px-3 py-1.5 text-[13px] font-medium text-[var(--pg-text-secondary)] bg-white hover:bg-slate-50 rounded-md border border-[var(--pg-border)] transition-colors flex items-center gap-1.5 disabled:opacity-50">
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-600' : ''}`} />
