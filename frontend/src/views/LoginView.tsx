@@ -247,6 +247,20 @@ export const LoginView: React.FC = () => {
               })}
             </div>
 
+            {/* Demo Security & Guardrails Card */}
+            <div className="mt-4 p-3.5 rounded-lg bg-slate-50 border border-[var(--pg-border)] space-y-2 text-[11px] text-[var(--pg-text-secondary)]">
+              <div className="font-semibold text-[var(--pg-text)] flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-blue-600" />
+                <span>Public Demo Safety & Architecture</span>
+              </div>
+              <ul className="space-y-1 text-[11px] list-disc list-inside text-[var(--pg-text-muted)]">
+                <li><strong className="text-[var(--pg-text)]">Server-Side Credentials:</strong> Zero AWS keys in browser; Bedrock model calls execute exclusively server-side.</li>
+                <li><strong className="text-[var(--pg-text)]">Rate Limiting & Quotas:</strong> Protected against automated abuse with per-session AI verification quotas.</li>
+                <li><strong className="text-[var(--pg-text)]">Synthetic Records Only:</strong> Curated hospital compendium; entry of real PHI/PII is blocked.</li>
+                <li><strong className="text-[var(--pg-text)]">Human-in-the-Loop:</strong> The AI agent acts in an advisory capacity; licensed human pharmacists retain dispensing authority.</li>
+              </ul>
+            </div>
+
             <p className="mt-4 text-center text-[11px] text-[var(--pg-text-muted)]">
               Hospital Pharmacy Operational Prototype. Test accounts are pre-configured.
             </p>

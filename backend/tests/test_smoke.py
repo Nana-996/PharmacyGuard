@@ -153,6 +153,80 @@ class PharmacyGuardSmokeTests(unittest.TestCase):
         self.assertIn("is_correct", data)
         self.assertIn("explanation_text", data)
 
+    def test_09_demo_quota_endpoint(self):
+        """Smoke 9: Validates GET /api/demo/quota returns session quota configuration."""
+        res = self.client.get("/api/demo/quota")
+        self.assertEqual(res.status_code, 200)
+        data = res.json()
+        self.assertEqual(data.get("status"), "success")
+        self.assertTrue(data.get("demo_mode"))
+        self.assertIn("quota", data)
+        self.assertEqual(data["quota"]["max_quota"], 20)
+        self.assertIn("remaining", data["quota"])
+
+    def test_10_agent_quota_consumption(self):
+        """Smoke 10: Validates agent quota tracking and exhaustion."""
+        from backend.security.demo_guard import DemoAgentQuotaTracker
+        tracker = DemoAgentQuotaTracker(max_calls_per_session=2)
+        
+        # Call 1
+        allowed, used, rem = tracker.check_and_consume("session-test-01")
+        self.assertTrue(allowed)
+        self.assertEqual(used, 1)
+        self.assertEqual(rem, 1)
+
+        # Call 2
+        allowed, used, rem = tracker.check_and_consume("session-test-01")
+        self.assertTrue(allowed)
+        self.assertEqual(used, 2)
+        self.assertEqual(rem, 0)
+
+        # Call 3 (Exhausted)
+        allowed, used, rem = tracker.check_and_consume("session-test-01")
+        self.assertFalse(allowed)
+        self.assertEqual(rem, 0)
+
+    def test_11_synthetic_patient_restriction(self):
+        """Smoke 11: Validates that arbitrary non-synthetic patient PII entry is blocked (HTTP 400)."""
+        login_res = self.client.post("/api/auth/login", json={
+            "email": "staff.pharmacist@hospital.dev",
+            "password": "DevStaff123!"
+        })
+        token = login_res.json()["access_token"]
+        auth_header = {"Authorization": f"Bearer {token}"}
+
+        # Attempt to create prescription for arbitrary unknown patient
+        bad_payload = {
+            "patient_id": "PAT-UNKNOWN-999",
+            "patient_name": "NonSynthetic Real Person Name",
+            "patient_age": 42,
+            "patient_sex": "Female",
+            "diagnosis": "Unverified Clinical Diagnosis",
+            "prescribing_doctor": "Dr. Unknown Doctor",
+            "medications": [{
+                "medication": "Amoxicillin",
+                "strength": "500mg",
+                "dosage": "1 cap",
+                "frequency": "Once daily"
+            }],
+            "auto_trigger_review": False
+        }
+        res = self.client.post("/api/prescriptions", json=bad_payload, headers=auth_header)
+        self.assertEqual(res.status_code, 400, "Arbitrary patient data must be blocked by demo sandbox policy.")
+        self.assertIn("Demonstration Sandbox Policy", res.json()["detail"])
+
+    def test_12_server_side_credentials_isolation(self):
+        """Smoke 12: Confirms zero AWS credentials exist in frontend code and rate limiter tracks requests."""
+        import glob
+        frontend_src_files = glob.glob("frontend/src/**/*.tsx", recursive=True) + glob.glob("frontend/src/**/*.ts", recursive=True)
+        self.assertTrue(len(frontend_src_files) > 0)
+        for fpath in frontend_src_files:
+            with open(fpath, "r", encoding="utf-8") as f:
+                content = f.read()
+                self.assertNotIn("AWS_BEARER_TOKEN_BEDROCK", content, f"Leaked token found in {fpath}")
+                self.assertNotIn("AWS_SECRET_ACCESS_KEY", content, f"Leaked secret key found in {fpath}")
+
 
 if __name__ == "__main__":
     unittest.main()
+

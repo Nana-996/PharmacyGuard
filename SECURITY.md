@@ -162,6 +162,18 @@ CREATE TABLE audit_events (
 
 ---
 
+## Public Competition Demo Guardrails
+
+To ensure safety, cost-control, and data integrity during the public competition evaluation, PharmacyGuard includes dedicated demonstration guardrails:
+
+1. **Strict Server-Side Credential Isolation:** The frontend single-page application contains zero AWS credentials, Bedrock bearer tokens, or sensitive API keys. All model invocations are executed strictly server-side through authenticated FastAPI endpoints.
+2. **Sliding-Window IP Rate Limiting:** The backend enforces an in-memory sliding-window rate limit (default: 60 requests/minute per IP) to protect the public demonstration server against automated denial-of-service or script looping.
+3. **Per-Session AI Agent Invocation Quota:** Each client session/IP is allocated an in-memory quota of **20 AI agent verification runs** (`DEMO_MAX_AGENT_CALLS_PER_SESSION`). Once consumed, subsequent review creation requests return `HTTP 429 Too Many Requests` with transparent guidance to protect AWS Bedrock API credits.
+4. **Synthetic-Only Data Barrier (PHI Prevention):** Creation of arbitrary external patient profiles is blocked by `is_approved_synthetic_patient()`. Users must evaluate existing synthetic hospital records or preconfigured clinical case scenarios, preventing unintended entry of real Protected Health Information (PHI/PII).
+5. **Persistent Demonstration Labeling:** Every view, modal, and header features explicit demonstration notices and badges to ensure clinicians and evaluators recognize the simulated scope.
+
+---
+
 ## Current Prototype Limitations
 
 As a demonstration prototype developed for the Amazon Agents for Humans Hackathon, the following limitations should be noted:

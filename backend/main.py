@@ -1,6 +1,6 @@
 import os
 from typing import Dict, Any
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
@@ -36,6 +36,43 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"],
 )
 
+from fastapi.responses import JSONResponse
+from backend.security.demo_guard import (
+    demo_rate_limiter,
+    demo_quota_tracker,
+    get_client_identifier,
+    DEMO_RATE_LIMIT_ENABLED,
+)
+
+# Demo Protection: Sliding-Window IP Rate Limiter
+@app.middleware("http")
+async def demo_rate_limit_middleware(request: Request, call_next):
+    # Allow preflights, docs, and health check without rate limiting
+    if request.method == "OPTIONS" or request.url.path in ("/health", "/docs", "/openapi.json"):
+        return await call_next(request)
+
+    client_id = get_client_identifier(request)
+    allowed, used, remaining = demo_rate_limiter.check_rate_limit(client_id)
+    if not allowed:
+        return JSONResponse(
+            status_code=429,
+            content={
+                "detail": "Rate limit exceeded. Please wait 60 seconds before making additional requests in this competition demo.",
+                "retry_after": 60,
+                "client_id": client_id
+            },
+            headers={
+                "Retry-After": "60",
+                "X-RateLimit-Limit": str(demo_rate_limiter.max_requests),
+                "X-RateLimit-Remaining": "0"
+            }
+        )
+
+    response = await call_next(request)
+    response.headers["X-RateLimit-Limit"] = str(demo_rate_limiter.max_requests)
+    response.headers["X-RateLimit-Remaining"] = str(remaining)
+    return response
+
 # Register API routers
 app.include_router(auth_router)
 app.include_router(prescriptions_router)
@@ -43,6 +80,20 @@ app.include_router(reviews_router)
 app.include_router(inventory_router)
 app.include_router(analytics_router)
 app.include_router(student_router)
+
+
+@app.get("/api/demo/quota")
+def get_demo_quota_endpoint(request: Request):
+    """Returns the current IP/session remaining AI agent verification quota for the public competition demo."""
+    client_id = get_client_identifier(request)
+    quota = demo_quota_tracker.get_quota(client_id)
+    return {
+        "status": "success",
+        "demo_mode": DEMO_RATE_LIMIT_ENABLED,
+        "client_id": client_id,
+        "quota": quota,
+        "disclaimer": "Competition Demonstration Sandbox: All clinical compendia and EHR data are synthetic. Zero AWS credentials exposed to browser."
+    }
 
 
 PHARMACIST_ROLES = ["STAFF_PHARMACIST", "CHIEF_PHARMACIST"]

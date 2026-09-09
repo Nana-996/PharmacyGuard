@@ -20,6 +20,7 @@ from backend.data.database import (
     insert_audit_event,
 )
 from backend.services.review_service import create_review
+from backend.security.demo_guard import is_approved_synthetic_patient
 
 router = APIRouter(prefix="/api/prescriptions", tags=["prescriptions"])
 
@@ -102,6 +103,16 @@ def create_prescription_endpoint(
     Creates or associates the patient, creates the diagnosis, and saves the medication items.
     Optionally launches the Strands Bedrock agent for automated clinical verification.
     """
+    # Demo Safety Gate: Block arbitrary non-synthetic patient PII entry
+    if not is_approved_synthetic_patient(patient_id=payload.patient_id, patient_name=payload.patient_name):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "Demonstration Sandbox Policy: Arbitrary patient record creation is restricted in this public demo "
+                "to prevent unintended PHI/PII entry. Please select an approved synthetic patient profile from the hospital directory or use preloaded case presets."
+            )
+        )
+
     # 1. Ensure patient exists or create
     pat = create_or_update_patient(
         patient_id=payload.patient_id,

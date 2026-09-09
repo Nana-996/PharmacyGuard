@@ -167,23 +167,30 @@ export const NewPrescriptionView: React.FC<NewPrescriptionViewProps> = ({
 
         {/* Section 2: Patient */}
         <div className="p-5 rounded-lg border border-[var(--pg-border)] bg-white space-y-3">
+          <div className="p-2.5 rounded-md bg-amber-50 border border-amber-200 text-[12px] text-amber-800 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>
+              <strong>Demonstration Sandbox Policy:</strong> Entry of real Patient Health Information (PHI/PII) is strictly prohibited. Please select an approved synthetic patient profile from the directory or load a clinical test case above.
+            </span>
+          </div>
+
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-[var(--pg-text)] flex items-center gap-1.5"><User className="w-4 h-4 text-blue-600" />2. Patient Details</h3>
+            <h3 className="text-sm font-semibold text-[var(--pg-text)] flex items-center gap-1.5"><User className="w-4 h-4 text-blue-600" />2. Synthetic Patient Profile</h3>
             {patients.length > 0 && (
               <select value={selectedPatientId} onChange={(e) => handlePatientSelect(e.target.value)} className="text-[13px] px-2 py-1 rounded-md border border-[var(--pg-border)] bg-white text-[var(--pg-text)]">
-                <option value="NEW">+ New Patient</option>
-                {patients.map((p) => <option key={p.patient_id} value={p.patient_id}>{p.name} ({p.patient_id})</option>)}
+                <option value="NEW" disabled>Select Synthetic Patient...</option>
+                {patients.map((p) => <option key={p.patient_id} value={p.patient_id}>{p.name} ({p.patient_id}) - Synthetic</option>)}
               </select>
             )}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <div className="sm:col-span-2"><label className={labelClasses}>Full Name *</label><input type="text" value={patientName} onChange={(e) => setPatientName(e.target.value)} placeholder="e.g. Kwame Mensah" className={inputClasses} required /></div>
+            <div className="sm:col-span-2"><label className={labelClasses}>Full Name (Synthetic) *</label><input type="text" value={patientName} onChange={(e) => setPatientName(e.target.value)} placeholder="e.g. Kwame Mensah" className={inputClasses} required /></div>
             <div><label className={labelClasses}>Age</label><input type="number" value={patientAge} onChange={(e) => setPatientAge(Number(e.target.value))} min={0} max={125} className={inputClasses} /></div>
             <div><label className={labelClasses}>Sex</label><select value={patientSex} onChange={(e) => setPatientSex(e.target.value)} className={inputClasses}><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div><label className={labelClasses}>Allergies</label><input type="text" value={patientAllergies} onChange={(e) => setPatientAllergies(e.target.value)} className={inputClasses} /></div>
-            <div><label className={labelClasses}>Diagnosis *</label><input type="text" value={diagnosis} onChange={(e) => setDiagnosis(e.target.value)} className={inputClasses} required /></div>
+            <div><label className={labelClasses}>Documented Allergies</label><input type="text" value={patientAllergies} onChange={(e) => setPatientAllergies(e.target.value)} className={inputClasses} /></div>
+            <div><label className={labelClasses}>Clinical Diagnosis *</label><input type="text" value={diagnosis} onChange={(e) => setDiagnosis(e.target.value)} className={inputClasses} required /></div>
           </div>
         </div>
 

@@ -117,6 +117,14 @@ CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhos
 BACKEND_HOST=0.0.0.0
 BACKEND_PORT=8000
 FRONTEND_PORT=5173
+
+# ==============================================================================
+# Competition Demo Guardrails & Rate Limiting
+# ==============================================================================
+DEMO_RATE_LIMIT_ENABLED=true
+DEMO_MAX_REQ_PER_MINUTE=60
+DEMO_MAX_AGENT_CALLS_PER_SESSION=20
+DEMO_RESTRICT_ARBITRARY_PATIENTS=true
 ```
 
 ---

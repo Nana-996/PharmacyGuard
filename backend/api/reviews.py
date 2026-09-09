@@ -4,10 +4,11 @@ Protected by JWT authentication and Role-Based Access Control (RBAC).
 """
 
 from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, HTTPException, Query, status, Depends
+from fastapi import APIRouter, HTTPException, Query, status, Depends, Request, Response
 from pydantic import BaseModel, Field
 
 from backend.auth.dependencies import get_current_user, require_roles
+from backend.security.demo_guard import demo_quota_tracker, get_client_identifier
 from backend.services.review_service import (
     create_review,
     get_pending_reviews,
@@ -48,12 +49,29 @@ class PharmacistEscalateRequest(BaseModel):
 @router.post("", status_code=status.HTTP_201_CREATED)
 def start_review_endpoint(
     payload: CreateReviewRequest,
+    request: Request,
+    response: Response,
     current_user: Dict[str, Any] = Depends(require_roles(PHARMACIST_ROLES))
 ) -> Dict[str, Any]:
     """
     Triggers an agent prescription review: retrieves prescription, performs clinical verification,
     checks inventory stock, persists structured findings, sets decision to PENDING, and records audit logs.
     """
+    client_id = get_client_identifier(request)
+    allowed, used, remaining = demo_quota_tracker.check_and_consume(client_id)
+    if not allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=(
+                f"Public demo quota reached: Maximum {demo_quota_tracker.max_quota} AI clinical verification runs "
+                f"per session to protect competition resources. Please explore existing verified reviews or refresh your session."
+            ),
+            headers={"X-Demo-Agent-Quota": str(demo_quota_tracker.max_quota), "X-Demo-Agent-Remaining": "0"}
+        )
+
+    response.headers["X-Demo-Agent-Quota"] = str(demo_quota_tracker.max_quota)
+    response.headers["X-Demo-Agent-Remaining"] = str(remaining)
+
     try:
         review = create_review(prescription_id=payload.prescription_id)
         return {

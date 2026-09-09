@@ -12,6 +12,7 @@ import { InventoryView } from './views/InventoryView';
 import { ChiefPharmacistView } from './views/ChiefPharmacistView';
 import { CaseDetailsView } from './views/CaseDetailsView';
 import { StudentWorkspaceView } from './views/StudentWorkspaceView';
+import { DemoNoticeBanner } from './components/common/DemoNoticeBanner';
 import { api } from './services/api';
 import { Activity } from 'lucide-react';
 
@@ -196,7 +197,12 @@ function AuthenticatedApp() {
 export function App() {
   return (
     <AuthProvider>
-      <AuthenticatedApp />
+      <div className="min-h-screen flex flex-col">
+        <DemoNoticeBanner />
+        <div className="flex-1 flex flex-col">
+          <AuthenticatedApp />
+        </div>
+      </div>
     </AuthProvider>
   );
 }
