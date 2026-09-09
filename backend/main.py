@@ -82,6 +82,17 @@ app.include_router(analytics_router)
 app.include_router(student_router)
 
 
+def get_environment_mode() -> str:
+    """Returns deployment environment mode (e.g. competition_demo, production, staging, local_development)."""
+    return os.getenv(
+        "ENVIRONMENT",
+        os.getenv(
+            "APP_ENV",
+            os.getenv("PHARMACYGUARD_ENV", "competition_demo" if DEMO_RATE_LIMIT_ENABLED else "local_development")
+        )
+    ).strip().lower()
+
+
 @app.get("/api/demo/quota")
 def get_demo_quota_endpoint(request: Request):
     """Returns the current IP/session remaining AI agent verification quota for the public competition demo."""
@@ -90,6 +101,7 @@ def get_demo_quota_endpoint(request: Request):
     return {
         "status": "success",
         "demo_mode": DEMO_RATE_LIMIT_ENABLED,
+        "environment": get_environment_mode(),
         "client_id": client_id,
         "quota": quota,
         "disclaimer": "Competition Demonstration Sandbox: All clinical compendia and EHR data are synthetic. Zero AWS credentials exposed to browser."
@@ -115,7 +127,7 @@ def health_check():
         "status": "healthy",
         "service": "PharmacyGuard Backend",
         "version": "0.3.0",
-        "mode": "local_development"
+        "mode": get_environment_mode()
     }
 
 

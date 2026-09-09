@@ -218,6 +218,7 @@ For comprehensive step-by-step installation instructions, see [SETUP.md](SETUP.m
 | `BEDROCK_MODEL_ID` | Yes | `us.anthropic.claude-sonnet-4-6` | Amazon Bedrock Claude model ID. |
 | `JWT_SECRET_KEY` | Optional | *Auto-generated ephemeral CSPRNG* | Secret key for signing session JWT tokens. Set in `.env` for persistent sessions. |
 | `CORS_ALLOWED_ORIGINS` | Optional | `http://localhost:5173,...` | Comma-separated list of allowed web client origins. |
+| `ENVIRONMENT` | Optional | `competition_demo` | Deployment mode reported by `/health` (`competition_demo`, `production`, `staging`, `local_development`). |
 
 See [.env.example](.env.example) for a complete template.
 

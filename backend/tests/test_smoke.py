@@ -4,6 +4,7 @@ Verifies critical health, authentication, security, CORS, simulated EHR retrieva
 deterministic clinical verification tools, HITL safety guardrails, and student simulation.
 """
 
+import os
 import unittest
 from fastapi.testclient import TestClient
 
@@ -26,12 +27,30 @@ class PharmacyGuardSmokeTests(unittest.TestCase):
         cls.client = TestClient(app)
 
     def test_01_health_check(self):
-        """Smoke 1: System health endpoint returns 200 OK and healthy status."""
+        """Smoke 1: System health endpoint returns 200 OK, healthy status, and environment-aware mode."""
         response = self.client.get("/health")
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertEqual(data.get("status"), "healthy")
         self.assertIn("service", data)
+        self.assertIn("mode", data)
+        self.assertTrue(len(data["mode"]) > 0)
+
+        # Verify dynamic environment awareness
+        original_env = os.environ.get("ENVIRONMENT")
+        try:
+            os.environ["ENVIRONMENT"] = "production"
+            prod_res = self.client.get("/health")
+            self.assertEqual(prod_res.json().get("mode"), "production")
+
+            os.environ["ENVIRONMENT"] = "competition_demo"
+            demo_res = self.client.get("/health")
+            self.assertEqual(demo_res.json().get("mode"), "competition_demo")
+        finally:
+            if original_env is None:
+                os.environ.pop("ENVIRONMENT", None)
+            else:
+                os.environ["ENVIRONMENT"] = original_env
 
     def test_02_auth_pharmacist_login(self):
         """Smoke 2: Pharmacist login returns valid session JWT and user profile."""

@@ -104,7 +104,7 @@ export const api = {
   },
 
   // --- Health Check ---
-  async getHealth(): Promise<{ status: string; service: string; version: string }> {
+  async getHealth(): Promise<{ status: string; service: string; version: string; mode?: string }> {
     const res = await fetch(`${API_BASE}/health`);
     return handleResponse(res);
   },
