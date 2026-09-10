@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Cpu, RefreshCw, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { Logo } from '../common/Logo';
 
 
 interface HeaderProps {
@@ -41,7 +42,8 @@ export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing = false 
 
   return (
     <header className="h-14 bg-white border-b border-[var(--pg-border)] px-5 flex items-center justify-between shrink-0">
-      <div className="flex items-center gap-2 text-[13px] text-[var(--pg-text-secondary)]">
+      <div className="flex items-center gap-2.5 text-[13px] text-[var(--pg-text-secondary)]">
+        <Logo size="xs" />
         <span className="font-medium text-[var(--pg-text)]">St. Jude Medical Center</span>
         <span className="text-[var(--pg-border)]">·</span>
         <span>Inpatient Pharmacy</span>

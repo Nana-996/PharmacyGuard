@@ -1,6 +1,8 @@
-# PharmacyGuard
+<div align="center">
 
-AI Clinical Verification Agent for Pharmacists & Pharmacy Students
+<img src="docs/assets/logo.svg" alt="PharmacyGuard Logo" width="380" />
+
+### AI Clinical Verification Agent for Pharmacists & Pharmacy Students
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Powered by Strands](https://img.shields.io/badge/Agent%20SDK-Strands-8A2BE2)](https://github.com/strands-agents)
@@ -8,6 +10,8 @@ AI Clinical Verification Agent for Pharmacists & Pharmacy Students
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/Frontend-React%2019-61DAFB)](https://react.dev/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Styling-Tailwind%20CSS%20v4-38B2AC)](https://tailwindcss.com/)
+
+</div>
 
 > **Built for the Amazon Agents for Humans Hackathon.**  
 > PharmacyGuard is an AI clinical verification and pharmacy operations agent that empowers licensed pharmacists and pharmacy students to catch prescribing errors, verify clinical guidelines, check simulated hospital inventory, and safeguard patient outcomes—all under strict **Human-in-the-Loop (HITL)** governance.

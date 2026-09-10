@@ -32,9 +32,7 @@
           stroke="url(#pg-shield-grad)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 
     <!-- Medical Cross -->
-    <!-- Horizontal arm -->
     <rect x="154" y="218" width="204" height="76" rx="16" fill="url(#pg-cross-grad)" />
-    <!-- Vertical arm -->
     <rect x="218" y="154" width="76" height="204" rx="16" fill="url(#pg-cross-grad)" />
 
     <!-- Verification Checkmark (Outer Glow/Shadow) -->

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 68" fill="none">
+  <defs>
+    <linearGradient id="lockup-shield-grad" x1="12" y1="8" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D4ED8" />
+      <stop offset="50%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="lockup-cross-grad" x1="20" y1="20" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E40AF" />
+      <stop offset="60%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="lockup-check-grad" x1="26" y1="38" x2="54" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D9488" />
+      <stop offset="35%" stop-color="#06B6D4" />
+      <stop offset="70%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#7DD3FC" />
+    </linearGradient>
+    <linearGradient id="lockup-check-inner" x1="28" y1="36" x2="48" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#BAE6FD" stop-opacity="0.75" />
+    </linearGradient>
+  </defs>
+
+  <!-- Scaled Logo Mark Icon (64x64 at offset 2,2) -->
+  <g transform="translate(4, 2) scale(0.125)">
+    <!-- Outer Shield Outline -->
+    <path d="M256 50 C344 54 420 80 432 108 C438 214 430 328 348 414 C308 456 270 478 256 486 C242 478 204 456 164 414 C82 328 74 214 80 108 C92 80 168 54 256 50 Z"
+          stroke="url(#lockup-shield-grad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+    <!-- Medical Cross -->
+    <rect x="154" y="218" width="204" height="76" rx="16" fill="url(#lockup-cross-grad)" />
+    <rect x="218" y="154" width="76" height="204" rx="16" fill="url(#lockup-cross-grad)" />
+
+    <!-- Dynamic Verification Checkmark -->
+    <path d="M206 242 C220 258 236 282 250 292 C260 299 272 296 284 280 C312 244 346 194 374 162 C350 182 320 224 286 264 C276 276 266 276 256 264 C244 252 228 232 216 222 C212 228 208 234 206 242 Z"
+          fill="url(#lockup-check-grad)" />
+    <path d="M212 238 C224 252 238 272 250 282 C258 288 268 286 278 272 C302 240 334 196 358 170 C340 188 314 224 284 258 C276 268 268 268 260 258 C248 246 232 228 222 218 C218 224 214 230 212 238 Z"
+          fill="url(#lockup-check-inner)" />
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(80, 0)">
+    <text x="0" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="800" letter-spacing="-0.03em" fill="#0F172A">
+      Pharmacy<tspan fill="#2563EB">Guard</tspan>
+    </text>
+    <text x="1" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="8.5" font-weight="700" letter-spacing="0.14em" fill="#64748B">
+      CLINICAL VERIFICATION AGENT
+    </text>
+  </g>
+</svg>

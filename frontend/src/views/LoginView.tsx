@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Activity, Lock, Mail, AlertCircle, LogIn, ArrowRight, Check } from 'lucide-react';
+import { Lock, Mail, AlertCircle, LogIn, ArrowRight, Check } from 'lucide-react';
+import { Logo } from '../components/common/Logo';
 
 export const LoginView: React.FC = () => {
   const { login } = useAuth();
@@ -94,14 +95,8 @@ export const LoginView: React.FC = () => {
   return (
     <div className="min-h-screen bg-[var(--pg-bg)] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex items-center justify-center gap-2.5">
-          <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center shadow-sm">
-            <Activity className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-[var(--pg-text)]">PharmacyGuard</h1>
-            <p className="text-[13px] text-[var(--pg-text-muted)]">Hospital Pharmacy Operations & Clinical Verification</p>
-          </div>
+        <div className="flex justify-center">
+          <Logo size="lg" showText={true} subtitle="Hospital Pharmacy Operations & Clinical Verification" />
         </div>
 
         <h2 className="mt-6 text-center text-lg font-semibold text-[var(--pg-text)]">

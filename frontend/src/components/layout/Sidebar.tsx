@@ -10,6 +10,7 @@ import {
   FilePlus
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { Logo } from '../common/Logo';
 
 export type NavView = 'dashboard' | 'new_prescription' | 'review' | 'queue' | 'inventory' | 'analytics' | 'case_details' | 'student';
 
@@ -91,14 +92,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-56 bg-white flex flex-col shrink-0 min-h-screen border-r border-[var(--pg-border)] select-none">
       {/* Brand Header */}
       <div className="px-5 py-4 border-b border-[var(--pg-border)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-            <Activity className="w-4.5 h-4.5 text-white" />
-          </div>
-          <span className="text-sm font-bold text-[var(--pg-text)] tracking-tight">
-            PharmacyGuard
-          </span>
-        </div>
+        <Logo size="sm" showText={true} />
       </div>
 
       {/* Navigation List */}
