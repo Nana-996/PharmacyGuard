@@ -1,6 +1,10 @@
-# Local Setup
+# PharmacyGuard — Setup & Deployment Guide
 
-This guide walks you through setting up and running **PharmacyGuard** locally on your workstation for development, evaluation, and hackathon judging.
+> 🌐 **Evaluating the Live Application?**  
+> Skip local configuration and test immediately at: **[https://pharmacy-guard.vercel.app/](https://pharmacy-guard.vercel.app/)**  
+> *(Pre-deployed with Amazon Bedrock and Strands Agent integration)*
+
+This guide walks you through running **PharmacyGuard** locally on your workstation or deploying it to cloud infrastructure for evaluation and hackathon judging.
 
 ---
 
@@ -220,3 +224,44 @@ Use the quick sign-in cards on the login screen to test each role:
 | 🩺 **Staff Pharmacist** | Dr. Alex Reed, PharmD | `staff.pharmacist@hospital.dev` | `DevStaff123!` | Review queue, AI clinical checks, approve/override workflows |
 | 📊 **Chief Pharmacist** | Dr. Eleanor Vance, PharmD | `chief.pharmacist@hospital.dev` | `DevChief123!` | Workload analytics, override audit ledger, inventory health |
 | 🎓 **Pharmacy Student** | Sam Taylor, Intern | `student@hospital.dev` | `DevStudent123!` | Blind clinical simulations, case quizzes, AI coaching scores |
+
+---
+
+## Cloud Deployment (Vercel & Render Architecture)
+
+For public evaluation and competition judging, PharmacyGuard is deployed as a high-availability split-architecture system:
+
+```
+┌─────────────────────────────────┐           ┌──────────────────────────────────────┐
+│       Vercel Global CDN         │           │             Render PaaS              │
+│    (React 19 + Tailwind v4)     │  REST/JWT │       (FastAPI + Strands Agent)      │
+│  https://pharmacy-guard.vercel.app  │ ────────> │   https://pharmacyguard.onrender.com   │
+└─────────────────────────────────┘           └───────────────────┬──────────────────┘
+                                                                  │
+                                                                  ▼
+                                                      ┌───────────────────────────────┐
+                                                      │        Amazon Bedrock         │
+                                                      │  (Claude Sonnet in us-east-1) │
+                                                      └───────────────────────────────┘
+```
+
+### 1. Frontend on Vercel
+- **Repository Root:** `frontend`
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Environment Variable (Config):**
+  - `VITE_API_URL`: `https://pharmacyguard.onrender.com`
+
+### 2. Backend on Render
+- **Environment:** Python 3 Web Service
+- **Build Command:** `pip install -r backend/requirements.txt`
+- **Start Command:** `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+- **Environment Variables:**
+  - `AWS_BEARER_TOKEN_BEDROCK`: *(Bedrock API Key)*
+  - `AWS_DEFAULT_REGION`: `us-east-1`
+  - `BEDROCK_MODEL_ID`: `us.anthropic.claude-sonnet-4-6`
+  - `CORS_ALLOWED_ORIGINS`: `*`
+
+### 3. Zero Downtime Keep-Alive
+- A free 10-minute HTTP ping is active via **UptimeRobot** against `https://pharmacyguard.onrender.com/health` to prevent cold starts during hackathon judging.
+

@@ -6,9 +6,12 @@ Welcome, Hackathon Judges! This document provides a **step-by-step, 5-minute eva
 
 ## ⏱️ 5-Minute Evaluation Quick-Start
 
+> 🌐 **Live Tryout URL:** **[https://pharmacy-guard.vercel.app/](https://pharmacy-guard.vercel.app/)** *(No installation required)*  
+> 💻 **Local URL:** `http://localhost:5173` *(If testing via local repository build)*
+
 | Step | Action | What to Look For | Time |
 |---|---|---|---|
-| **1. Launch App** | Open [http://localhost:5173](http://localhost:5173) | One-Click Demo Login Screen with 3 distinct roles. | 30s |
+| **1. Launch App** | Open **[https://pharmacy-guard.vercel.app/](https://pharmacy-guard.vercel.app/)** | One-Click Demo Login Screen with 3 distinct roles. | 30s |
 | **2. Staff Pharmacist Review** | Click **"Staff Pharmacist"** direct login | Prescription Queue with live triage statuses. | 1m |
 | **3. Test Severe Allergy** | Open **`RX-1003`** (Robert Taylor) | AI flags **`HIGH_PRIORITY_REVIEW`** (Augmentin vs. Penicillin anaphylaxis). | 1m |
 | **4. Test Human-in-the-Loop** | Attempt to Override `RX-1003` | System blocks approval without mandatory clinical justification. | 30s |
@@ -21,7 +24,7 @@ Welcome, Hackathon Judges! This document provides a **step-by-step, 5-minute eva
 
 ### 1. Authentication & Role-Based Access Control (RBAC)
 
-Navigate to [http://localhost:5173](http://localhost:5173). You will see the **One-Click Quick Sign-In Cards**:
+Navigate to **[https://pharmacy-guard.vercel.app/](https://pharmacy-guard.vercel.app/)** (or `http://localhost:5173` locally). You will see the **One-Click Quick Sign-In Cards**:
 
 - 🩺 **Staff Pharmacist:** `staff.pharmacist@hospital.dev` / `DevStaff123!` (Dr. Alex Reed, PharmD)
 - 📊 **Chief Pharmacist:** `chief.pharmacist@hospital.dev` / `DevChief123!` (Dr. Eleanor Vance, PharmD)

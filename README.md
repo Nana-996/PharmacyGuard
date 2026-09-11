@@ -4,15 +4,18 @@
 
 ### AI Clinical Verification Agent for Pharmacists & Pharmacy Students
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-pharmacy--guard.vercel.app-2ea44f?style=for-the-badge&logo=vercel)](https://pharmacy-guard.vercel.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Powered by Strands](https://img.shields.io/badge/Agent%20SDK-Strands-8A2BE2)](https://github.com/strands-agents)
 [![Amazon Bedrock](https://img.shields.io/badge/AWS-Amazon%20Bedrock-FF9900)](https://aws.amazon.com/bedrock/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688)](https://fastapi.tiangolo.com/)
-[![React 19](https://img.shields.io/badge/Frontend-React%2019-61DAFB)](https://react.dev/)
-[![Tailwind CSS v4](https://img.shields.io/badge/Styling-Tailwind%20CSS%20v4-38B2AC)](https://tailwindcss.com/)
+[![Backend](https://img.shields.io/badge/Backend-FastAPI%20on%20Render-009688)](https://pharmacyguard.onrender.com/health)
+[![Frontend](https://img.shields.io/badge/Frontend-React%2019%20on%20Vercel-61DAFB)](https://pharmacy-guard.vercel.app/)
 
 </div>
 
+> 🌐 **Try the Live Application:** **[https://pharmacy-guard.vercel.app/](https://pharmacy-guard.vercel.app/)**  
+> Evaluators and judges can click any of the **1-Click Direct Sign In** cards (**Staff Pharmacist**, **Chief Pharmacist**, or **Pharmacy Student**) to test immediately without registering!
+>
 > **Built for the Amazon Agents for Humans Hackathon.**  
 > PharmacyGuard is an AI clinical verification and pharmacy operations agent that empowers licensed pharmacists and pharmacy students to catch prescribing errors, verify clinical guidelines, check simulated hospital inventory, and safeguard patient outcomes—all under strict **Human-in-the-Loop (HITL)** governance.
 
@@ -277,7 +280,7 @@ For full judge testing procedures, see [TESTING.md](TESTING.md).
 ## Demo
 
 ### 1-Click Login Accounts
-On the login screen ([http://localhost:5173](http://localhost:5173)), quick-login cards allow instant testing:
+On the live login screen (**[https://pharmacy-guard.vercel.app/](https://pharmacy-guard.vercel.app/)**) or local development ([http://localhost:5173](http://localhost:5173)), quick-login cards allow instant testing:
 
 - 🩺 **Staff Pharmacist:** `staff.pharmacist@hospital.dev` (Password: `DevStaff123!`) — Review queue, AI clinical verification, approve/override workflows.
 - 📊 **Chief Pharmacist:** `chief.pharmacist@hospital.dev` (Password: `DevChief123!`) — Clinical analytics, staff oversight, override logs, stock management.
